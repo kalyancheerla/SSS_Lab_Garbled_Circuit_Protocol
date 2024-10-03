@@ -1,7 +1,8 @@
-FROM python:3.7-slim
+FROM python:3.11-slim
 
-ENV PYTHONDONTWRITEBYTECODE=1
-RUN pip3 install kafka-python
+RUN pip install --no-cache-dir faker kafka-python
 
-COPY consumer .
-CMD ["python3", "-u", "./consumer.py"]
+WORKDIR /app
+COPY consumer.py .
+
+CMD ["python", "./consumer.py"]

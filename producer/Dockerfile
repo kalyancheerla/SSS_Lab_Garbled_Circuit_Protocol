@@ -1,8 +1,8 @@
-FROM python:3.7-slim
+FROM python:3.11-slim
 
-ENV PYTHONDONTWRITEBYTECODE=1
-RUN pip3 install kafka-python
-RUN pip3 install faker
+RUN pip install --no-cache-dir faker kafka-python
 
-COPY producer .
-CMD ["python3", "-u", "./producer.py"]
+WORKDIR /app
+COPY producer.py .
+
+CMD ["python", "./producer.py"]

@@ -1,21 +1,18 @@
 from kafka import KafkaProducer
 from kafka.errors import KafkaError
 import json
-import faker
+import faker, uuid
 from datetime import datetime
 import logging
 import time
+import argparse
 
 logging.basicConfig(level=logging.INFO)
 
 class Producer:
-
-    def __init__(self):
-        self._init_kafka_producer()
-
-    def _init_kafka_producer(self):
-        self.kafka_host = "kafka-local.kafkaplaypen.svc.cluster.local:9092"
-        self.kafka_topic = "my-topic"
+    def __init__(self, host, topic):
+        self.kafka_host = host
+        self.kafka_topic = topic
         self.producer = KafkaProducer(
             bootstrap_servers=self.kafka_host, value_serializer=lambda v: json.dumps(v).encode(),
         )
@@ -29,22 +26,47 @@ class Producer:
         else:
             logging.info(f"Published message {message} into topic {self.kafka_topic}")
 
-    @staticmethod
-    def create_random_email():
-        f = faker.Faker()
-        new_contact = dict(
-            username=f.user_name(),
-            first_name=f.first_name(),
-            last_name=f.last_name(),
-            email=f.email(),
-            date_created=str(datetime.utcnow()),
-        )
-        return new_contact
+def create_fake_message(creds=False):
+    f = faker.Faker()
 
+    # Default message
+    message_text = f.sentence(nb_words=6)
+
+    # If the flag is set, add credentials to the message text
+    if creds:
+        username = f.user_name()
+        password = f.password()
+        message_text = f"Hey, my username is {username} and my password is {password}"
+
+    message = {
+        "message_id": str(uuid.uuid4()),
+        "sender_id": str(uuid.uuid4()),
+        "receiver_id": str(uuid.uuid4()),
+        "message_text": message_text,
+        "timestamp": datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'),
+        "chat_room_id": str(uuid.uuid4()),
+        "metadata": {
+            "is_read": f.boolean(),
+            "is_deleted": f.boolean()
+        }
+    }
+    return message
 
 if __name__ == "__main__":
-    producer = Producer()
-    while True:
-        random_email = producer.create_random_email()
-        producer.publish_to_kafka(random_email)
+    parser = argparse.ArgumentParser(description='Kafka Producer with command-line arguments.')
+
+    # Define command-line arguments
+    parser.add_argument('broker', type=str, help='The Kafka broker address (e.g., localhost:9092)')
+    parser.add_argument('topic', type=str, help='The Kafka topic to send messages to (e.g., chatmsgs)')
+
+    # Parse the arguments
+    args = parser.parse_args()
+
+    # Create the producer using the parsed arguments
+    producer = Producer(args.broker, args.topic)
+
+    for i in range(5):
+        if i == 3:
+            producer.publish_to_kafka(create_fake_message(creds=True))
+        producer.publish_to_kafka(create_fake_message())
         time.sleep(5)
