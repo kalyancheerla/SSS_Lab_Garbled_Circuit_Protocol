@@ -1,0 +1,50 @@
+# Create a namespace for the Flask application
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-pipeline
+
+---
+# Flask Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-app-deployment
+  namespace: test-pipeline
+  labels:
+    app: flask-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flask-app
+  template:
+    metadata:
+      labels:
+        app: flask-app
+    spec:
+      containers:
+      - name: flask-container
+        image: maliciouspod:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 5000
+        command: ["python"]
+        args: ["/app/main.py"]
+
+---
+# Flask Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-app-service
+  namespace: test-pipeline
+spec:
+  type: NodePort
+  selector:
+    app: flask-app
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
+      nodePort: 30000
