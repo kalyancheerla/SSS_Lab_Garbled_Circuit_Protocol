@@ -1,14 +1,14 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: kafka
+  name: kafka-production
 
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: zookeeper
-  namespace: kafka
+  namespace: kafka-production
   labels:
     app: zookeeper
 spec:
@@ -35,7 +35,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: zookeeper
-  namespace: kafka
+  namespace: kafka-production
   labels:
     app: zookeeper
 spec:
@@ -51,7 +51,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: kafka
-  namespace: kafka
+  namespace: kafka-production
   labels:
     app: kafka
 spec:
@@ -84,7 +84,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: kafka
-  namespace: kafka
+  namespace: kafka-production
   labels:
     app: kafka
 spec:
