@@ -1,6 +1,6 @@
 # Setup for Lab assignment
 1. Have a working k8's cluster with atleast 1 node.
-   (Simply just install rancher-desktop which installs wsl, docker, k8's, kubectl & properly configures them)
+   (Simply just install rancher-desktop which installs wsl, docker, k8's, kubectl & properly configures them in windows)
 2. Setting-up kafka
     * Create a separate namespace - `kubectl create namespace kafka-production`
     * Deploy strimzi crds - `kubectl create -f https://strimzi.io/install/latest?namespace=kafka-production -n kafka-production`

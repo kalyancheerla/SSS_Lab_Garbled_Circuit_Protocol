@@ -9,7 +9,8 @@ import multiprocessing
 # Set up Faker to generate random data
 fake = Faker()
 #BROKER_IP = 'localhost:9092'
-BROKER_IP = 'broker:9092'
+#BROKER_IP = 'broker:9092'
+BROKER_IP = 'kafka-cluster-kafka-bootstrap.kafka-production.svc.cluster.local:9092'
 #BROKER_IP = '192.168.4.168:9092'
 
 # Function to generate a JSON object for the chat message
