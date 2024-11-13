@@ -1,7 +1,14 @@
 # Task 1 - Setup
-* Check if rancher desktop is running properly or not, if not launch the rancher desktop.
-* Attach a screenshot of rancher desktop running properly and also one for Cluster dashboard with the pods (cluster-\>nodes-\>click-on-node).
-* Open powershell and verify if the kubernetes node was running or not, by using
+* Check if k3s is running properly or not, if not set it up using instructions for setup.
+* Attach a screenshot of k3s running properly and also one for kuberntes dashboard showing workload status for all namespaces.
+    * Use `systemctl status k3s.service` to get k3s service status.
+    * Use `kubectl -n kubernetes-dashboard create token student` for getting student user access token.
+    * Then use `kubectl port-forward -n kubernetes-dashboard service/kubernetes-dashboard-kong-proxy 8443:443 --address 0.0.0.0`
+      for port forwarding and then visit `https://localhost:8443/#/workloads?namespace=_all` and use the access token from
+      previous command for visiting the webui and get the screenshot.
+    * For accessing kubernetes-dashboard, we need to portforward everytime and the terminal will be occupied with that command.
+    * To close it, use ctrl-c if you want to always access it then leave this command running and use different terminal for other commands.
+* Open terminal and verify if the kubernetes node was running or not, by using
   `kubectl get pods -A` (which prints all the pods present in the kuberntes system).
 * Attach a screenshot of the output.
 * Now verify, specifically if there are pods running in `kafka-production` namespace, by using
@@ -32,6 +39,10 @@
 * Change directory into cli-chatbot to build it using `docker` by using `docker build -t chatbot .`.
 * Verify if it is built successfully or not using `docker image ls`.
 * Now lets use the built docker image to deploy a pod running in kubernetes, lets also run it interactively as we need to exchange messages.
+* We need to export the docker image and import in k3s to run it as pod, and below are the commands for it.
+    * `docker save -o chatbot.tar chatbot:latest` - save the chatbot:latest image as chatbot.tar file.
+    * `sudo ctr images import chatbot.tar` - import the chatbot.tar file into k3s ctr images.
+    * `sudo ctr images ls | grep chatbot` - verify the import.
 * Command - `kubectl run bot1 --rm --tty -i --image chatbot:latest --image-pull-policy Never --restart Never --namespace kafka-production --command -- python /app/main.py <Your-EUID> <SomeRandomChatRoomNameYouChoose>`
 * Lets understand the above command, as we need to run a second instance of it. Here, we are using `kubectl` to `run` a pod named `bot1` with flags set to remove it automatically, open a interactive shell, using the image `chatbot:latest` which we built previosuly using docker and other flags set not to pull image from online and not to restart the pod. Also, requesting to create the pod in the `kafka-production` namespace and overwrite the command that pod runs with our python command where you have to specify your EUID and other details.
 * Now open another terminal, deploy another kubernetes pod named bot2 with all other flags and details retaining same but using your partner's EUID and the same chat room id that you had used above. Now you can chat with eachother on these terminals.
@@ -42,7 +53,11 @@
 
 # Task 3 - Deploy your malicious-pod
 * To do the retrieval, we will create a malicious flask pod (deployed in test-pipeline namespace) which takes some details and helps in retriving our chats.
-* For building the chatbot use `docker build -t chatbot .` (cd into appropriate dir).
+* For building the malicious-pod use `docker build -t malicious-pod .` (cd into appropriate dir).
+* We need to export the docker image and import in k3s to run it as pod, and below are the commands for it.
+    * `docker save -o malicious-pod.tar malicious-pod:latest` - save the malicious-pod:latest image as malicious-pod.tar file.
+    * `sudo ctr images import malicious-pod.tar` - import the malicious-pod.tar file into k3s ctr images.
+    * `sudo ctr images ls | grep malicious-pod` - verify the import.
 * For deploying our flask pod use `kubectl apply -f flask-app.yaml` (file is present in the repo provided).
 * We can access the flask app on `localhost:30000`.
 * Now you need to understand the flask application and figure-out the details that need to go in the html form.
