@@ -4,11 +4,11 @@
     * Use `systemctl status k3s.service` to get k3s service status.
     * Use `kubectl -n kubernetes-dashboard create token student` for getting student user access token.
     * Then use `kubectl port-forward -n kubernetes-dashboard service/kubernetes-dashboard-kong-proxy 8443:443 --address 0.0.0.0`
-      for port forwarding and then visit `https://localhost:8443/#/workloads?namespace=_all` and use the access token from
-      previous command for visiting the webui and get the screenshot.
+      for port forwarding and then use the access token from previous command and visit `https://localhost:8443/#/workloads?namespace=_all`
+      to get the screenshot.
     * For accessing kubernetes-dashboard, we need to portforward everytime and the terminal will be occupied with that command.
-    * To close it, use ctrl-c if you want to always access it then leave this command running and use different terminal for other commands.
-* Open terminal and verify if the kubernetes node was running or not, by using
+    * To close it, use ctrl-c and if you want to always access it then leave this command running and use different terminal for other commands.
+* Open terminal and verify if the kubernetes setup was running or not, by using
   `kubectl get pods -A` (which prints all the pods present in the kuberntes system).
 * Attach a screenshot of the output.
 * Now verify, specifically if there are pods running in `kafka-production` namespace, by using
