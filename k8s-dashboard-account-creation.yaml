@@ -23,9 +23,9 @@ metadata:
   name: kubernetes-dashboard-ingress
   namespace: kubernetes-dashboard
   annotations:
-    konghq.com/strip-path: "true"
-    kubernetes.io/ingress.class: "kong"
+    konghq.com/strip-path: "true"  # Keep other Kong-specific annotations here
 spec:
+  ingressClassName: kong  # Specify the ingress class here
   rules:
     - host: localhost
       http:
