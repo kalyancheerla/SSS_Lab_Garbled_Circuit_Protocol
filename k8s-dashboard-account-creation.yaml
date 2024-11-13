@@ -23,14 +23,14 @@ metadata:
   name: kubernetes-dashboard-ingress
   namespace: kubernetes-dashboard
   annotations:
-    konghq.com/strip-path: "true"  # Keep other Kong-specific annotations here
+    traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
 spec:
-  ingressClassName: kong  # Specify the ingress class here
+  ingressClassName: traefik
   rules:
     - host: localhost
       http:
         paths:
-          - path: /
+          - path: /dashboard
             pathType: Prefix
             backend:
               service:
