@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
       - name: flask-container
-        image: maliciouspod:latest
+        image: malicious-pod:latest
         imagePullPolicy: Never
         ports:
         - containerPort: 5000
